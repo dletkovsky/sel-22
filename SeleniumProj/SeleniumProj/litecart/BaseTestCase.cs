@@ -14,6 +14,7 @@ namespace SeleniumProj.litecart
     {
         protected IWebDriver driver;
         protected WebDriverWait wait;
+        protected VerifyUtils verifyUtils;
 
         [SetUp]
         public void startBrowser()
@@ -21,6 +22,7 @@ namespace SeleniumProj.litecart
             driver = new ChromeDriver();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            verifyUtils = new VerifyUtils();
         }
 
         [TearDown]

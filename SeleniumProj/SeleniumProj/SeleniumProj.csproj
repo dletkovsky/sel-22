@@ -61,6 +61,7 @@
     <Compile Include="FirstTest.cs" />
     <Compile Include="litecart\BaseTestCase.cs" />
     <Compile Include="litecart\LitecartLoginTest.cs" />
+    <Compile Include="litecart\VerifyUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

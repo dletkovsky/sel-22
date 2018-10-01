@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
@@ -84,14 +86,26 @@ namespace SeleniumProj.litecart
         }
 
 
-        [Test]
-        public void LoginTest()
+        public void loginAdmin()
         {
             //1) входит в панель администратора http://localhost/litecart/admin
             driver.Url = "http://localhost/litecart/admin/";
             driver.FindElement(By.XPath(USERNAME_INPUT_XPATH)).SendKeys("admin");
             driver.FindElement(By.XPath(PASSWORD_INPUT_XPATH)).SendKeys("admin");
             driver.FindElement(By.XPath(LOGIN_BUTTON_XPATH)).Click();
+        }
+
+        public void openMainPageLitecart()
+        {
+            driver.Url = "http://localhost/litecart/";
+        }
+
+
+        [Test]
+        public void LoginTest()
+        {
+            //1) входит в панель администратора http://localhost/litecart/admin
+            loginAdmin();
 
 
             //2) прокликивает последовательно все пункты меню слева, включая вложенные пункты
@@ -160,9 +174,7 @@ namespace SeleniumProj.litecart
                     {
                         driver.FindElement(By.XPath($"//li[{i}]/ul/li[{j}]")).Click();
                     }
-
                 }
-
             }
 
             /*
@@ -185,11 +197,34 @@ namespace SeleniumProj.litecart
             }*/
 
 
-
-            
-
-
             Assert.True(driver.FindElements(By.XPath(LOGOUT_BUTTON_XPATH)).Count > 0);
+        }
+
+
+        public bool isStickerPresent(string box, int index) => driver.FindElements(By.XPath(
+                                                                       $"//div[@id='{box}']//ul[@class='listing-wrapper products']/li[{index}]//div[contains(@class, 'sticker ')]"))
+                                                                   .Count >
+                                                               0;
+
+
+        [Test]
+        public void LoginTest_task8()
+        {
+            //1) входит в панель администратора http://localhost/litecart/admin
+            openMainPageLitecart();
+
+            foreach (var box in new List<string> { "box-most-popular", "box-campaigns", "box-latest-products" })
+            {
+                var countMostPopularProducts = driver
+                    .FindElements(By.XPath($"//div[@id='{box}']//ul[@class='listing-wrapper products']/li"))
+                    .Count;
+                for (var i = 1; i <= countMostPopularProducts; i++)
+                {
+                    verifyUtils.verifyTrue(isStickerPresent(box, i),
+                        $"Стикер отсутствует у товара в разделе {box} c индексом {i}");
+                }
+            }
+            verifyUtils.checkForVerifications();
         }
     }
 }
