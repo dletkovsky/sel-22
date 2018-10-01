@@ -149,6 +149,24 @@ namespace SeleniumProj.litecart
             };
 
 
+            int count = driver.FindElements(By.XPath("//ul[@class='list-vertical']/li")).Count;
+            for (int i = 1; i <= count; i++)
+            {
+                driver.FindElement(By.XPath($"//ul[@class='list-vertical']/li[{i}]")).Click();
+                if (driver.FindElements(By.XPath($"//li[{i}]/ul")).Count > 0)
+                {
+                    int countChild = driver.FindElements(By.XPath($"//li[{i}]/ul/li")).Count;
+                    for (int j = 1; j <= countChild; j++)
+                    {
+                        driver.FindElement(By.XPath($"//li[{i}]/ul/li[{j}]")).Click();
+                    }
+
+                }
+
+            }
+
+            /*
+
             foreach (var menuItem in menuItemsList)
             {
                 if (menuItem.Item2 != null)
@@ -164,7 +182,12 @@ namespace SeleniumProj.litecart
 
                 //3) для каждой страницы проверяет наличие заголовка(то есть элемента с тегом h1)
                 Assert.True(driver.FindElements(By.CssSelector("h1")).Count > 0);
-            }
+            }*/
+
+
+
+            
+
 
             Assert.True(driver.FindElements(By.XPath(LOGOUT_BUTTON_XPATH)).Count > 0);
         }
