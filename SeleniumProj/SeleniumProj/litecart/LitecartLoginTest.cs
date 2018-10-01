@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using NUnit.Framework;
@@ -90,6 +91,14 @@ namespace SeleniumProj.litecart
         {
             //1) входит в панель администратора http://localhost/litecart/admin
             driver.Url = "http://localhost/litecart/admin/";
+            driver.FindElement(By.XPath(USERNAME_INPUT_XPATH)).SendKeys("admin");
+            driver.FindElement(By.XPath(PASSWORD_INPUT_XPATH)).SendKeys("admin");
+            driver.FindElement(By.XPath(LOGIN_BUTTON_XPATH)).Click();
+        }
+
+        public void loginAdmin(string url)
+        {
+            driver.Url = url;
             driver.FindElement(By.XPath(USERNAME_INPUT_XPATH)).SendKeys("admin");
             driver.FindElement(By.XPath(PASSWORD_INPUT_XPATH)).SendKeys("admin");
             driver.FindElement(By.XPath(LOGIN_BUTTON_XPATH)).Click();
@@ -213,7 +222,7 @@ namespace SeleniumProj.litecart
             //1) входит в панель администратора http://localhost/litecart/admin
             openMainPageLitecart();
 
-            foreach (var box in new List<string> { "box-most-popular", "box-campaigns", "box-latest-products" })
+            foreach (var box in new List<string> {"box-most-popular", "box-campaigns", "box-latest-products"})
             {
                 var countMostPopularProducts = driver
                     .FindElements(By.XPath($"//div[@id='{box}']//ul[@class='listing-wrapper products']/li"))
@@ -223,6 +232,93 @@ namespace SeleniumProj.litecart
                     verifyUtils.verifyTrue(isStickerPresent(box, i),
                         $"Стикер отсутствует у товара в разделе {box} c индексом {i}");
                 }
+            }
+
+            verifyUtils.checkForVerifications();
+        }
+
+
+        [Test]
+        public void LoginTest_task9_1()
+        {
+            //1) открываем http://localhost/litecart/admin/?app=countries&doc=countries
+            loginAdmin("http://localhost/litecart/admin/?app=countries&doc=countries");
+
+
+            var countCountries = driver.FindElements(By.XPath("//form[@name='countries_form']//tbody/tr")).Count;
+
+
+            var listCountriesWithZones = new List<int>();
+
+
+            var listCountries = new List<string>();
+            for (var i = 2; i < countCountries; i++)
+            {
+                listCountries.Add(driver.FindElement(By.XPath($"//form[@name='countries_form']//tbody/tr[{i}]/td[5]")).Text);
+                if (driver.FindElement(By.XPath($"//form[@name='countries_form']//tbody/tr[{i}]/td[6]")).Text != "0")
+                {
+                    listCountriesWithZones.Add(i);
+                }
+            }
+
+            var expectedList = listCountries.OrderBy(s => s);
+            verifyUtils.verifyTrue(listCountries.SequenceEqual(expectedList), "Некорретная сортировка стран!");
+
+            
+
+            if (listCountriesWithZones.Count != 0)
+            {
+                foreach (var index in listCountriesWithZones)
+                {
+                    driver.FindElement(By.XPath($"//form[@name='countries_form']//tbody/tr[{index}]/td[5]/a")).Click();
+                    var count = driver.FindElements(By.XPath("//table[@id='table-zones']/tbody/tr")).Count;
+                    var zonesList = new List<string>();
+                    for (var i = 2; i < count; i++)
+                    {
+                        zonesList.Add(driver.FindElement(By.XPath($"//table[@id='table-zones']/tbody/tr[{i}]/td[3]")).Text);
+                    }
+                    var expectedZonesList = zonesList.OrderBy(s => s);
+                    verifyUtils.verifyTrue(zonesList.SequenceEqual(expectedZonesList), "Некорретная сортировка zones!");
+                    driver.Url = "http://localhost/litecart/admin/?app=countries&doc=countries";
+                }
+            }
+            verifyUtils.checkForVerifications();
+        }
+
+
+        [Test]
+        public void LoginTest_task9_2()
+        {
+            //1) открываем http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones
+            loginAdmin("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
+
+
+            var countCountries = driver.FindElements(By.XPath("//form[@name='geo_zones_form']//tbody/tr")).Count;
+
+
+            var listCountries = new List<string>();
+            for (var i = 2; i < countCountries; i++)
+            {
+                listCountries.Add(driver.FindElement(By.XPath($"//form[@name='geo_zones_form']//tbody/tr[{i}]/td[3]")).Text);
+            }
+
+            var expectedList = listCountries.OrderBy(s => s);
+            verifyUtils.verifyTrue(listCountries.SequenceEqual(expectedList), "Некорретная сортировка стран!");
+
+
+            for (int j = 2; j < countCountries; j++)
+            {
+                    driver.FindElement(By.XPath($"//form[@name='geo_zones_form']//tbody/tr[{j}]/td[3]/a")).Click();
+
+                    var count = driver.FindElements(By.XPath("//table[@id='table-zones']/tbody/tr")).Count;
+                    var zonesList = new List<string>();
+                    for (var i = 2; i < count; i++)
+                    {
+                        zonesList.Add(driver.FindElement(By.XPath($"//table[@id='table-zones']/tbody/tr[{i}]/td[3]/select/option[@selected]")).Text);
+                    }
+                    var expectedZonesList = zonesList.OrderBy(s => s);
+                    verifyUtils.verifyTrue(zonesList.SequenceEqual(expectedZonesList), "Некорретная сортировка zones!");
+                driver.Url = "http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones";
             }
             verifyUtils.checkForVerifications();
         }
