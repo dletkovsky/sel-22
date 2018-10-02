@@ -9,7 +9,6 @@ D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\bin\Debug\nunit.frame
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\bin\Debug\Selenium.WebDriverBackedSelenium.xml
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\bin\Debug\WebDriver.xml
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\bin\Debug\WebDriver.Support.xml
-D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Debug\SeleniumProj.csprojAssemblyReference.cache
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Debug\SeleniumProj.csproj.CoreCompileInputs.cache
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Debug\SeleniumProj.csproj.CopyComplete
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Debug\SeleniumProj.dll

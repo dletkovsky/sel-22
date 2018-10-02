@@ -19,8 +19,8 @@ namespace SeleniumProj.litecart.objects
         public Color colorRegPrice { get; set; }
 
 
-        public Size sizeCampPrice { get; set; }
-        public Size sizeRegPrice { get; set; }
+        public float sizeCampPrice { get; set; }
+        public float sizeRegPrice { get; set; }
 
 
         public bool isRGBEqualColorRegPrice() =>
