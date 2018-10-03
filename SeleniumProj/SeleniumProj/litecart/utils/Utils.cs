@@ -18,7 +18,8 @@ namespace SeleniumProj.litecart.utils
             {
                 return ColorTranslator.FromHtml(cssColor);
             }
-            else if (cssColor.StartsWith("rgb")) //rgb or argb
+
+            if (cssColor.StartsWith("rgb")) //rgb or argb
             {
                 int left = cssColor.IndexOf('(');
                 int right = cssColor.IndexOf(')');
@@ -37,7 +38,8 @@ namespace SeleniumProj.litecart.utils
                 {
                     return Color.FromArgb(r, g, b);
                 }
-                else if (parts.Length == 4)
+
+                if (parts.Length == 4)
                 {
                     float a = float.Parse(parts[3], CultureInfo.InvariantCulture);
                     return Color.FromArgb((int)(a * 255), r, g, b);

@@ -216,7 +216,7 @@ namespace SeleniumProj.litecart
 
 
         public bool isStickerPresent(string box, int index) => driver.FindElements(By.XPath(
-                                                                       $"//div[@id='{box}']//ul[@class='listing-wrapper products']/li[{index}]//div[contains(@class, 'sticker ')]"))
+                                                                       $"//div[@id='{box}']//li[contains(@class, 'product')][{index}]//div[contains(@class, 'sticker ')]"))
                                                                    .Count == 1;
 
 
@@ -228,7 +228,7 @@ namespace SeleniumProj.litecart
             foreach (var box in new List<string> {"box-most-popular", "box-campaigns", "box-latest-products"})
             {
                 var countMostPopularProducts = driver
-                    .FindElements(By.XPath($"//div[@id='{box}']//ul[@class='listing-wrapper products']/li"))
+                    .FindElements(By.XPath($"//div[@id='{box}']//li[contains(@class, 'product')]"))
                     .Count;
                 for (var i = 1; i <= countMostPopularProducts; i++)
                 {
