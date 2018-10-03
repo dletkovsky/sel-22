@@ -217,8 +217,7 @@ namespace SeleniumProj.litecart
 
         public bool isStickerPresent(string box, int index) => driver.FindElements(By.XPath(
                                                                        $"//div[@id='{box}']//ul[@class='listing-wrapper products']/li[{index}]//div[contains(@class, 'sticker ')]"))
-                                                                   .Count >
-                                                               0;
+                                                                   .Count == 1;
 
 
         [Test]
@@ -361,8 +360,10 @@ namespace SeleniumProj.litecart
                 "Цвет акционной цены на главной странице и странице товара различны!");
 
             //проверка цветов обычной цены
-            verifyUtils.verifyTrue(productMainPage.isRGBEqualColorRegPrice(), "Цвет обычной цены на главной странице некорректен!");
-            verifyUtils.verifyTrue(product.isRGBEqualColorRegPrice(), "Цвет обычной цены на странице товара некорректен!");
+            verifyUtils.verifyTrue(productMainPage.isRGBEqualColorRegPrice(),
+                "Цвет обычной цены на главной странице некорректен!");
+            verifyUtils.verifyTrue(product.isRGBEqualColorRegPrice(),
+                "Цвет обычной цены на странице товара некорректен!");
             verifyUtils.checkForVerifications();
         }
 
@@ -373,8 +374,6 @@ namespace SeleniumProj.litecart
         public const string CAMPAIGNS_PRODUCT_PRODUCT_PAGE_XPATH_PATTERN =
             "//div[@id='box-product']";
 
-
-        
 
         public Product getCompaignsProductOnMainPage(int index)
         {
@@ -398,7 +397,8 @@ namespace SeleniumProj.litecart
                                           $"[{index}]//div/s[@class='regular-price']"))
                     .GetCssValue("color")),
                 sizeCampPrice = float.Parse(driver.FindElement(By.XPath(CAMPAIGNS_PRODUCT_MAIN_PAGE_XPATH_PATTERN +
-                                                                        $"[{index}]//div/strong[@class='campaign-price']")).GetCssValue("fontSize")
+                                                                        $"[{index}]//div/strong[@class='campaign-price']"))
+                    .GetCssValue("fontSize")
                     .Replace("px", ""), CultureInfo.InvariantCulture.NumberFormat),
 
                 sizeRegPrice = float.Parse(driver
@@ -438,14 +438,15 @@ namespace SeleniumProj.litecart
                     .GetCssValue("color")),
 
                 sizeCampPrice = float.Parse(driver
-                    .FindElement(By.XPath(CAMPAIGNS_PRODUCT_PRODUCT_PAGE_XPATH_PATTERN +
-                                          "//strong[@class='campaign-price']"))
-                    .GetCssValue("fontSize")
-                    .Replace("px", ""),
-                CultureInfo.InvariantCulture.NumberFormat),
+                        .FindElement(By.XPath(CAMPAIGNS_PRODUCT_PRODUCT_PAGE_XPATH_PATTERN +
+                                              "//strong[@class='campaign-price']"))
+                        .GetCssValue("fontSize")
+                        .Replace("px", ""),
+                    CultureInfo.InvariantCulture.NumberFormat),
 
                 sizeRegPrice = float.Parse(driver
-                    .FindElement(By.XPath(CAMPAIGNS_PRODUCT_PRODUCT_PAGE_XPATH_PATTERN + "//s[@class='regular-price']"))
+                        .FindElement(By.XPath(CAMPAIGNS_PRODUCT_PRODUCT_PAGE_XPATH_PATTERN +
+                                              "//s[@class='regular-price']"))
                         .GetCssValue("fontSize")
                         .Replace("px", ""),
                     CultureInfo.InvariantCulture.NumberFormat)
