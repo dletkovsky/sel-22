@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.RegularExpressions;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using SeleniumProj.litecart.objects;
 using SeleniumProj.litecart.utils;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace SeleniumProj.litecart
+namespace SeleniumProj.litecart.tests
 {
     public class LitecartLoginTest : BaseTestCase
     {
-        private const string USERNAME_INPUT_XPATH = "//input[@name='username']";
-        private const string PASSWORD_INPUT_XPATH = "//input[@name='password']";
-        private const string LOGIN_BUTTON_XPATH = "//button[@name='login']";
-        private const string LOGOUT_BUTTON_XPATH = "//a[@href='http://localhost/litecart/admin/logout.php']";
 
+        private const string LOGOUT_BUTTON_XPATH = "//a[@href='http://localhost/litecart/admin/logout.php']";
 
         const string MAIN_MENU_XPATH_PATTERN = "//span[text()='{0}']";
         const string MAIN_MENU_CHILD_XPATH_PATTERN = "//li[//span[text()='{0}']]//span[text()='{1}']";
@@ -92,27 +85,7 @@ namespace SeleniumProj.litecart
         }
 
 
-        public void loginAdmin()
-        {
-            //1) входит в панель администратора http://localhost/litecart/admin
-            driver.Url = "http://localhost/litecart/admin/";
-            driver.FindElement(By.XPath(USERNAME_INPUT_XPATH)).SendKeys("admin");
-            driver.FindElement(By.XPath(PASSWORD_INPUT_XPATH)).SendKeys("admin");
-            driver.FindElement(By.XPath(LOGIN_BUTTON_XPATH)).Click();
-        }
-
-        public void loginAdmin(string url)
-        {
-            driver.Url = url;
-            driver.FindElement(By.XPath(USERNAME_INPUT_XPATH)).SendKeys("admin");
-            driver.FindElement(By.XPath(PASSWORD_INPUT_XPATH)).SendKeys("admin");
-            driver.FindElement(By.XPath(LOGIN_BUTTON_XPATH)).Click();
-        }
-
-        public void openMainPageLitecart()
-        {
-            driver.Url = "http://localhost/litecart/";
-        }
+        
 
 
         [Test]
@@ -368,6 +341,7 @@ namespace SeleniumProj.litecart
         }
 
 
+        
         public const string CAMPAIGNS_PRODUCT_MAIN_PAGE_XPATH_PATTERN =
             "//div[@id='box-campaigns']//ul[@class='listing-wrapper products']/li";
 
