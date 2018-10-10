@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumProj.litecart.objects;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
@@ -68,6 +69,141 @@ namespace SeleniumProj.litecart.tests
 
             var createdProduct = getNewProductByName(newProduct.name);
             Assert.True(newProduct.Equals(createdProduct), "Созданный продукт некорректен!");
+        }
+
+
+        [Test]
+        public void task13()
+        {
+            //1 открыть главную страницу
+            openMainPageLitecart();
+
+
+            for (var i = 0; i < 3; i++)
+            {
+                var quanitityBefore = getQuantityItems();
+
+
+                //2 открыть первый товар из списка
+                driver.FindElement(By.XPath("//div[@id='box-most-popular']//li[contains(@class, 'product')][1]"))
+                    .Click();
+                //3 добавить его в корзину
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(0);
+                if (driver.FindElements(By.XPath("//select[@name='options[Size]']")).Count > 0)
+                {
+                    new SelectElement(driver.FindElement(By.XPath("//select[@name='options[Size]']")))
+                        .SelectByValue("Small");
+                }
+
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                driver.FindElement(By.XPath("//button[@name='add_cart_product']")).Click();
+
+
+                //4 подождать, пока счётчик товаров в корзине обновится
+                new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(
+                    d => driver.FindElement(By.XPath($"//span[@class='quantity' and text()={quanitityBefore + 1}]"))
+                        .Displayed);
+
+                //5 вернуться на главную страницу, повторить предыдущие шаги ещё два раза,
+                //чтобы в общей сложности в корзине было 3 единицы товара
+                openMainPage();
+            }
+
+
+            //6 открыть корзину(в правом верхнем углу кликнуть по ссылке Checkout)
+            driver.FindElement(By.XPath("//a[contains(text(), 'Checkout')]")).Click();
+
+
+            //7 удалить все товары из корзины один за другим, после каждого удаления подождать, пока внизу обновится таблица
+            if (driver.FindElements(By.XPath("//ul[@class='shortcuts']")).Count > 0)
+            {
+                driver.FindElement(By.XPath("//ul[@class='shortcuts']/li[1]")).Click();
+
+
+                var count = driver.FindElements(By.XPath("//ul[@class='shortcuts']/li")).Count;
+                Console.WriteLine("всего элементов в корзине: " + count);
+
+//                var countInTable = getCountItemsInTable();
+
+
+                for (var i = count; i >= 1; i--)
+                {
+                    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                    wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[@name='remove_cart_item']")));
+
+
+
+                    driver.FindElement(By.XPath(
+                        $"//table[@class = 'dataTable rounded-corners']/tbody/tr[{i + 1}]/td[2][@class='item']"));
+
+
+                    driver.FindElement(By.XPath("//button[@name='remove_cart_item']")).Click();
+                    Console.WriteLine("удалили элемент номер: " + i);
+
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                    wait.Until(ExpectedConditions.StalenessOf(driver.FindElement(By.XPath(
+                        $"//table[@class = 'dataTable rounded-corners']/tbody/tr[{i + 1}]/td[2][@class='item']"))));
+
+
+//                    new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(
+//                        d => getCountItemsInTable() == countInTable - i);
+                }
+            }
+            else
+            {
+                Console.WriteLine("был один продукт в корзине");
+                driver.FindElement(By.XPath("//button[@name='remove_cart_item']")).Click();
+            }
+
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@id='checkout-cart-wrapper']//em")));
+            Assert.True(isCartEmpty(), "Корзина не пустая!");
+        }
+
+
+        public int getCountItemsInTable()
+        {
+            int count = driver.FindElements(By.XPath("//table[@class = 'dataTable rounded-corners']/tbody/tr")).Count;
+            int counter = 0;
+            if (count > 0)
+            {
+                for (int i = 2; i <= count; i++)
+                {
+                    if (driver.FindElements(By.XPath(
+                                $"//table[@class = 'dataTable rounded-corners']/tbody/tr[{i}]/td[2][@class='item']"))
+                            .Count > 0)
+                    {
+                        counter++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return counter;
+        }
+
+
+        public bool isCartEmpty()
+        {
+            return driver.FindElements(
+                           By.XPath(
+                               "//div[@id='checkout-cart-wrapper']//em[text()='There are no items in your cart.']"))
+                       .Count > 0;
+        }
+
+
+        public int getQuantityItems()
+        {
+            return int.Parse(driver.FindElement(By.XPath("//span[@class='quantity']")).GetAttribute("textContent"));
+        }
+
+
+        public void openMainPage()
+        {
+            driver.FindElement(By.XPath("//div[@id='logotype-wrapper']")).Click();
         }
 
 
