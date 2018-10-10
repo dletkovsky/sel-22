@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using NUnit.Framework;
@@ -132,7 +133,6 @@ namespace SeleniumProj.litecart.tests
                     wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[@name='remove_cart_item']")));
 
 
-
                     driver.FindElement(By.XPath(
                         $"//table[@class = 'dataTable rounded-corners']/tbody/tr[{i + 1}]/td[2][@class='item']"));
 
@@ -158,6 +158,70 @@ namespace SeleniumProj.litecart.tests
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@id='checkout-cart-wrapper']//em")));
             Assert.True(isCartEmpty(), "Корзина не пустая!");
+        }
+
+
+        [Test]
+        public void task14()
+        {
+            //1 зайти в админку
+            loginAdmin();
+
+
+            //2) открыть пункт меню Countries(или страницу http://localhost/litecart/admin/?app=countries&doc=countries)
+            openMenuItem(new Tuple<Enum, Enum>(MENU_ENUM.COUNTRIES, null));
+
+
+            //3) открыть на редактирование какую-нибудь страну или начать создание новой
+            openEditCountry("Australia");
+
+
+            var hferList = new List<Tuple<string, string, string>>
+            {
+                new Tuple<string, string, string>("Code", "en.wikipedia.org/wiki/ISO_3166-1_alpha-2",
+                    "en.wikipedia.org/wiki/ISO_3166-1_alpha-2"),
+                new Tuple<string, string, string>("Code", "en.wikipedia.org/wiki/ISO_3166-1_alpha-3",
+                    "en.wikipedia.org/wiki/ISO_3166-1_alpha-3"),
+                new Tuple<string, string, string>("Tax ID Format",
+                    "en.wikipedia.org/wiki/Regular_expression",
+                    "en.wikipedia.org/wiki/Regular_expression"),
+                new Tuple<string, string, string>("Address Format",
+                    "www.addressdoctor.com/en/countries-data/address-formats.html",
+                    "www.informatica.com/products/data-quality/data-as-a-service/address-verification/address-formats.html"),
+                new Tuple<string, string, string>("Postcode Format",
+                    "en.wikipedia.org/wiki/Regular_expression",
+                    "en.wikipedia.org/wiki/Regular_expression"),
+                new Tuple<string, string, string>("Currency Code",
+                    "en.wikipedia.org/wiki/List_of_countries_and_capitals_with_currency_and_language",
+                    "en.wikipedia.org/wiki/List_of_countries_and_capitals_with_currency_and_language"),
+                new Tuple<string, string, string>("Phone Country Code",
+                    "en.wikipedia.org/wiki/List_of_country_calling_codes",
+                    "en.wikipedia.org/wiki/List_of_country_calling_codes")
+            };
+
+
+            //4)нажимаем на ссылки с иконкой, они открываются в новом окне.
+            foreach (var hrefItem in hferList)
+            {
+                driver.FindElement(
+                        By.XPath($"//td[strong[text()='{hrefItem.Item1}']]//a[contains(@href, '{hrefItem.Item2}')]"))
+                    .Click();
+
+                switchToAnotherWindowHandleFromCurrent();
+
+                wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+                wait.Until(ExpectedConditions.UrlContains(hrefItem.Item3));
+
+                switchToAnotherWindowHandleFromCurrent();
+                closeOtherWindows();
+            }
+        }
+
+
+        public void openEditCountry(string country)
+        {
+            driver.FindElement(By.XPath($"//form[@name='countries_form']//tbody/tr/td[5]/a[text()='{country}']"))
+                .Click();
         }
 
 
