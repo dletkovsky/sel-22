@@ -28,11 +28,8 @@ namespace SeleniumProj.litecart.tests
         public void closeBrowser()
         {
             driver.Close();
-            if (driver != null)
-            {
-                driver.Quit();
-                driver.Dispose();
-            }
+            driver.Quit();
+            driver.Dispose();
         }
 
 
