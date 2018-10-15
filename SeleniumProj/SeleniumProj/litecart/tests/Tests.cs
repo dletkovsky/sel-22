@@ -176,20 +176,14 @@ namespace SeleniumProj.litecart.tests
             openEditCountry("Australia");
 
 
-            var hferList = new List<Tuple<string, string>>
+            var hferList = new List<Tuple<string>>
             {
-                new Tuple<string, string>("Code", "alpha-2"),
-                new Tuple<string, string>("Code", "alpha-3"),
-                new Tuple<string, string>("Tax ID Format",
-                    "Regular_expression"),
-                new Tuple<string, string>("Address Format",
-                    "address-formats"),
-                new Tuple<string, string>("Postcode Format",
-                    "Regular_expression"),
-                new Tuple<string, string>("Currency Code",
-                    "List_of_countries_and_capitals_with_currency_and_language"),
-                new Tuple<string, string>("Phone Country Code",
-                    "List_of_country_calling_codes")
+                new Tuple<string>("Code"),
+                new Tuple<string>("Tax ID Format"),
+                new Tuple<string>("Address Format"),
+                new Tuple<string>("Postcode Format"),
+                new Tuple<string>("Currency Code"),
+                new Tuple<string>("Phone Country Code")
             };
 
 
@@ -197,7 +191,7 @@ namespace SeleniumProj.litecart.tests
             foreach (var hrefItem in hferList)
             {
                 driver.FindElement(
-                        By.XPath($"//td[strong[text()='{hrefItem.Item1}']]//a[contains(@href, '{hrefItem.Item2}')]/i"))
+                        By.XPath($"//td[strong[text()='{hrefItem.Item1}']]//a[@target='_blank']/i"))
                     .Click();
 
                 switchToAnotherWindowHandleFromCurrent();
