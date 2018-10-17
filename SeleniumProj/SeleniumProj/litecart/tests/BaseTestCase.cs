@@ -5,12 +5,13 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support.Events;
 
 namespace SeleniumProj.litecart.tests
 {
     public class BaseTestCase
     {
-        protected IWebDriver driver;
+        protected EventFiringWebDriver driver;
         protected WebDriverWait wait;
         protected VerifyUtils verifyUtils;
 
@@ -18,8 +19,19 @@ namespace SeleniumProj.litecart.tests
         public void startBrowser()
         {
 //            driver = new InternetExplorerDriver();
-            driver = new ChromeDriver();
+            driver = new EventFiringWebDriver(new ChromeDriver());
+
+            //обработчики событий
+            driver.FindingElement += (sender, e) => Console.WriteLine(e.FindMethod);
+            driver.FindElementCompleted += (sender, e) => Console.WriteLine(e.FindMethod + " found");
+            driver.ExceptionThrown += (sender, e) => Console.WriteLine(e.ThrownException);
+
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+         
+
+
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             verifyUtils = new VerifyUtils();
         }

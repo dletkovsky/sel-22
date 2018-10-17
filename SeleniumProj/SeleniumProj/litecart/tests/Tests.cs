@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -193,6 +194,38 @@ namespace SeleniumProj.litecart.tests
             }
         }
 
+
+        [Test]
+        public void task17()
+        {
+            //1 зайти в админку
+            loginAdmin();
+
+
+            //2) открыть каталог, категорию, которая содержит товары
+            //(страница http://localhost/litecart/admin/?app=catalog&doc=catalog&category_id=1)
+            openCatalog();
+
+
+            //3) последовательно открывать страницы товаров и проверять, не появляются ли в логе браузера сообщения(любого уровня)
+            for (var i = 5; i <= 9; i++)
+            {
+                driver.FindElement(By.XPath($"//tbody/tr[{i}]/td[3]//a")).Click();
+                foreach (LogEntry l in driver.Manage().Logs.GetLog("browser"))
+                {
+                    Assert.Fail("Ошибка в логах браузера: " + l.Message);
+                }
+
+                openCatalog();
+            }
+        }
+
+
+        public void openCatalog()
+        {
+            openMenuItem(new Tuple<Enum, Enum>(MENU_ENUM.CATALOG, null));
+            driver.FindElement(By.XPath("//tbody/tr[3]/td[3]//a")).Click();
+        }
 
         public void openEditCountry(string country)
         {
