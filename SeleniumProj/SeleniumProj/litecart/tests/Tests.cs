@@ -176,22 +176,11 @@ namespace SeleniumProj.litecart.tests
             openEditCountry("Australia");
 
 
-            var hferList = new List<Tuple<string>>
-            {
-                new Tuple<string>("Code"),
-                new Tuple<string>("Tax ID Format"),
-                new Tuple<string>("Address Format"),
-                new Tuple<string>("Postcode Format"),
-                new Tuple<string>("Currency Code"),
-                new Tuple<string>("Phone Country Code")
-            };
-
-
             //4)нажимаем на ссылки с иконкой, они открываются в новом окне.
-            foreach (var hrefItem in hferList)
+            foreach (var index in new[] {2, 3, 6, 7, 8, 9, 10})
             {
                 driver.FindElement(
-                        By.XPath($"//td[strong[text()='{hrefItem.Item1}']]//a[@target='_blank']/i"))
+                        By.XPath($"//tbody/tr[{index}]//a[@target='_blank']/i"))
                     .Click();
 
                 switchToAnotherWindowHandleFromCurrent();
