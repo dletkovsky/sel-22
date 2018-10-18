@@ -162,6 +162,9 @@ namespace SeleniumProj.litecart.tests
         }
 
 
+        private const string ITEM_TARGET_BLANK_PATTERN_XPATH =
+            "//form[@method='post']/table[not(@class)]/tbody/tr[{0}]//a[@target='_blank']";
+
         [Test]
         public void task14()
         {
@@ -178,15 +181,28 @@ namespace SeleniumProj.litecart.tests
 
 
             //4)нажимаем на ссылки с иконкой, они открываются в новом окне.
-            foreach (var index in new[] {2, 3, 6, 7, 8, 9, 10})
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(0);
+
+
+            int count = driver.FindElements(By.XPath("//form[@method='post']/table[not(@class)]/tbody/tr")).Count;
+            List<int> indexes = new List<int>();
+            for (int i = 0; i <= count; i++)
+            {
+                if (driver.FindElements(By.XPath(string.Format(ITEM_TARGET_BLANK_PATTERN_XPATH, i))).Count > 0)
+                {
+                    indexes.Add(i);
+                }
+            }
+
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+
+            foreach (var index in indexes)
             {
                 driver.FindElement(
-                        By.XPath($"//tbody/tr[{index}]//a[@target='_blank']/i"))
+                        By.XPath(string.Format(ITEM_TARGET_BLANK_PATTERN_XPATH, index) + "/i"))
                     .Click();
 
                 switchToAnotherWindowHandleFromCurrent();
-
-                wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
                 wait.Until(ExpectedConditions.UrlContains("http"));
 
                 switchToAnotherWindowHandleFromCurrent();

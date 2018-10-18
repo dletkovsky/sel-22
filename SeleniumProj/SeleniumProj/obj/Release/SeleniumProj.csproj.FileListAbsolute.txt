@@ -18,3 +18,4 @@ D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Release\SeleniumP
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Release\SeleniumProj.csproj.CopyComplete
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Release\SeleniumProj.dll
 D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Release\SeleniumProj.pdb
+D:\autotests\courses\Selenium_22\SeleniumProj\SeleniumProj\obj\Release\SeleniumProj.csprojAssemblyReference.cache
