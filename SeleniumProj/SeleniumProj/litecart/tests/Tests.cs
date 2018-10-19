@@ -8,6 +8,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumProj.litecart.objects;
+using SeleniumProj.litecart.pages;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
 namespace SeleniumProj.litecart.tests
@@ -77,7 +78,7 @@ namespace SeleniumProj.litecart.tests
         [Test]
         public void task13()
         {
-            //1 открыть главную страницу
+            /*//1 открыть главную страницу
             openMainPageLitecart();
 
 
@@ -108,7 +109,7 @@ namespace SeleniumProj.litecart.tests
 
                 //5 вернуться на главную страницу, повторить предыдущие шаги ещё два раза,
                 //чтобы в общей сложности в корзине было 3 единицы товара
-                openMainPage();
+//                openMainPage();
             }
 
 
@@ -158,7 +159,7 @@ namespace SeleniumProj.litecart.tests
 
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@id='checkout-cart-wrapper']//em")));
-            Assert.True(isCartEmpty(), "Корзина не пустая!");
+            Assert.True(isCartEmpty(), "Корзина не пустая!");*/
         }
 
 
@@ -237,6 +238,34 @@ namespace SeleniumProj.litecart.tests
         }
 
 
+
+               
+        [Test]
+        public void task19()
+        {
+            //1 открыть главную страницу
+            var mainPage = new MainPage();
+            mainPage.open();
+
+
+            //2 добавить в корзину 3 товара
+            mainPage.addCarts(3);
+            
+
+            //4 открыть корзину(в правом верхнем углу кликнуть по ссылке Checkout)
+            var basketPage = mainPage.openBasket();
+
+
+            //5 удалить все товары из корзины один за другим, после каждого удаления подождать, пока внизу обновится таблица
+            basketPage.deleteAllProductsFromBasket();
+
+
+            //6 Проверить условие, что корзина пустая
+            Assert.True(basketPage.isCartEmpty(), "Корзина не пустая!");
+        }
+
+
+
         public void openCatalog()
         {
             openMenuItem(new Tuple<Enum, Enum>(MENU_ENUM.CATALOG, null));
@@ -275,25 +304,19 @@ namespace SeleniumProj.litecart.tests
         }
 
 
-        public bool isCartEmpty()
-        {
-            return driver.FindElements(
-                           By.XPath(
-                               "//div[@id='checkout-cart-wrapper']//em[text()='There are no items in your cart.']"))
-                       .Count > 0;
-        }
+        
 
 
-        public int getQuantityItems()
+        /*public int getQuantityItems()
         {
             return int.Parse(driver.FindElement(By.XPath("//span[@class='quantity']")).GetAttribute("textContent"));
-        }
+        }*/
 
 
-        public void openMainPage()
+        /*public void openMainPage()
         {
             driver.FindElement(By.XPath("//div[@id='logotype-wrapper']")).Click();
-        }
+        }*/
 
 
         public NewProduct getNewProductByName(string nameProduct)

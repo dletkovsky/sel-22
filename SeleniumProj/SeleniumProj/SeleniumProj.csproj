@@ -60,6 +60,11 @@
   <ItemGroup>
     <Compile Include="FirstTest.cs" />
     <Compile Include="litecart\objects\NewProduct.cs" />
+    <Compile Include="litecart\pages\BasePage.cs" />
+    <Compile Include="litecart\pages\Basket.cs" />
+    <Compile Include="litecart\pages\BasketPage.cs" />
+    <Compile Include="litecart\pages\CartPage.cs" />
+    <Compile Include="litecart\pages\MainPage.cs" />
     <Compile Include="litecart\tests\BaseTestCase.cs" />
     <Compile Include="litecart\tests\LitecartLoginTest.cs" />
     <Compile Include="litecart\objects\Product.cs" />

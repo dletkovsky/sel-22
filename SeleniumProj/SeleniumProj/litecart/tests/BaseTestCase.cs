@@ -11,14 +11,14 @@ namespace SeleniumProj.litecart.tests
 {
     public class BaseTestCase
     {
-        protected EventFiringWebDriver driver;
+        public static EventFiringWebDriver driver;
         protected WebDriverWait wait;
         protected VerifyUtils verifyUtils;
+
 
         [SetUp]
         public void startBrowser()
         {
-//            driver = new InternetExplorerDriver();
             driver = new EventFiringWebDriver(new ChromeDriver());
 
             //обработчики событий
@@ -28,9 +28,7 @@ namespace SeleniumProj.litecart.tests
 
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-
-         
-
+            
 
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             verifyUtils = new VerifyUtils();
